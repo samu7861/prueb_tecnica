@@ -2,6 +2,8 @@
 
 A new Flutter project.
 
+1. a proposito se subió la token key para que se pudiera usar instantaneamente quien le corresponda
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
