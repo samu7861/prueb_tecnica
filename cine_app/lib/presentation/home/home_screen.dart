@@ -8,6 +8,7 @@ import '../../domain/entities/movie.dart';
 import 'bloc/home_bloc.dart';
 import 'package:cine_app/infrastructure/datasources/movie_datasources_inf.dart';
 
+
 class HomeScreen extends StatelessWidget {
   static const name = "home-screen";
 
