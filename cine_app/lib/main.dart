@@ -1,6 +1,5 @@
 import 'package:cine_app/infrastructure/datasources/movie_detail_datasource.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'config/router/app_router.dart';
 import 'config/theme/app_theme.dart';

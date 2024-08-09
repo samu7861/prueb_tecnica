@@ -2,7 +2,6 @@ import 'package:cine_app/presentation/movie_profile/bloc/movie_detail_bloc.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 class MovieDetailScreen extends StatelessWidget {
   final String movieId;
 
@@ -42,7 +41,8 @@ class MovieDetailScreen extends StatelessWidget {
                 children: [
                   FadeInImage.assetNetwork(
                     placeholder: 'assets/placeholder.png',
-                    image: 'https://image.tmdb.org/t/p/w500${movieDetails.backdropPath}',
+                    image:
+                        'https://image.tmdb.org/t/p/w500${movieDetails.backdropPath}',
                     height: 300,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -62,28 +62,38 @@ class MovieDetailScreen extends StatelessWidget {
                       children: [
                         Text(
                           movieDetails.title,
-                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
-                        const SizedBox(height: 8.0),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Acción para ver la película
-                          },
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[700]),
-                          child: const Text('WATCH NOW'),
+                          style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                         const SizedBox(height: 8.0),
                         Row(
-                          children: List.generate(
-                            5,
-                            (starIndex) => Icon(
-                              starIndex < (movieDetails.voteAverage / 2).floor()
-                                  ? Icons.star
-                                  : Icons.star_border,
-                              size: 16,
-                              color: Colors.amber,
+                          mainAxisAlignment: MainAxisAlignment
+                              .spaceBetween, // Para separar el botón y las estrellas
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                // Acción para ver la película
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey[700]),
+                              child: const Text('WATCH NOW'),
                             ),
-                          ),
+                            Row(
+                              children: List.generate(
+                                5,
+                                (starIndex) => Icon(
+                                  starIndex <
+                                          (movieDetails.voteAverage / 2).floor()
+                                      ? Icons.star
+                                      : Icons.star_border,
+                                  size: 16,
+                                  color: Colors.amber,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 16.0),
                         Text(
@@ -93,14 +103,19 @@ class MovieDetailScreen extends StatelessWidget {
                         const SizedBox(height: 16.0),
                         const Text(
                           'Cast',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                         const SizedBox(height: 8.0),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
-                            children: movieDetails.productionCompanies.map((company) {
-                              return _buildActorAvatar(company.name, 'https://image.tmdb.org/t/p/w500${company.logoPath ?? ''}');
+                            children:
+                                movieDetails.productionCompanies.map((company) {
+                              return _buildActorAvatar(company.name,
+                                  'https://image.tmdb.org/t/p/w500${company.logoPath ?? ''}');
                             }).toList(),
                           ),
                         ),
@@ -110,7 +125,9 @@ class MovieDetailScreen extends StatelessWidget {
                           style: TextStyle(color: Colors.white),
                         ),
                         Text(
-                          movieDetails.productionCompanies.map((e) => e.name).join(', '),
+                          movieDetails.productionCompanies
+                              .map((e) => e.name)
+                              .join(', '),
                           style: const TextStyle(color: Colors.white70),
                         ),
                         const SizedBox(height: 16.0),
