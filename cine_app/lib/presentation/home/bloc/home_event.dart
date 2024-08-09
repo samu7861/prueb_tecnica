@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+part of 'home_bloc.dart';
 
 abstract class HomeEvent extends Equatable {
   const HomeEvent();
@@ -7,4 +7,6 @@ abstract class HomeEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadMovies extends HomeEvent {}
+class GetNowPlayingMovies extends HomeEvent {}
+
+class GetPopularMovies extends HomeEvent {}

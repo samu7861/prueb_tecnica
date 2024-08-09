@@ -1,6 +1,4 @@
 import 'package:cine_app/main.dart';
-import 'package:cine_app/presentation/home/bloc/home_event.dart';
-import 'package:cine_app/presentation/home/bloc/home_state.dart';
 import 'package:cine_app/presentation/home/widgets/custom_appBar.dart';
 import 'package:cine_app/presentation/home/widgets/movie_sliders.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +17,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeBloc(moviesDatasoruce: MovieDatasourcesInf())
-        ..add(LoadMovies()),
+        ..add(GetNowPlayingMovies()),
       child: const HomeView(),
     );
   }
@@ -64,14 +62,36 @@ class HomeView extends StatelessWidget {
                     builder: (context, state) {
                       if (state is HomeLoading) {
                         return const Center(child: CircularProgressIndicator());
-                      } else if (state is HomeMoviesLoaded) {
-                        return Column(
-                          children: [
-                            MovieHorizontalList(movies: state.nowPlayingMovies),
-                            SizedBox(height: 20),
-                            MovieHorizontalList(movies: state.popularMovies),
-                          ],
-                        );
+                      } else if (state is HomeLoaded) {
+                        return MovieHorizontalList(movies: state.movies);
+                      } else if (state is HomeError) {
+                        return Center(child: Text(state.message));
+                      }
+                      return const Center(child: Text('No data available.'));
+                    },
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "TOP RATED",
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                        Text(
+                          "See all",
+                          style: TextStyle(fontSize: 14, color: Colors.white70),
+                        ),
+                      ],
+                    ),
+                  ),
+                  BlocBuilder<HomeBloc, HomeState>(
+                    builder: (context, state) {
+                      if (state is HomeLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (state is HomeLoaded) {
+                        return MovieHorizontalList(movies: state.movies); 
                       } else if (state is HomeError) {
                         return Center(child: Text(state.message));
                       }
