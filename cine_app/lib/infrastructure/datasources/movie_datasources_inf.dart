@@ -31,6 +31,23 @@ class MovieDatasourcesInf extends MoviesDatasoruce{
     return movies;
 
   }
+  
+  @override
+  Future<List<Movie>> getPopular({int page = 1}) async{
+
+    final response = await dio.get("/movie/");
+
+    final movieResponse = MovieResponse.fromJson(response.data);
+    
+    final List<Movie> movies = movieResponse.results
+    .where((moviedb) => moviedb.posterPath != "no-poster")
+    .map(
+      (moviedb) => MovieMapper.movieDBToEntity(moviedb)
+    ).toList();
+
+    return movies;
+
+  }
 
 }
 

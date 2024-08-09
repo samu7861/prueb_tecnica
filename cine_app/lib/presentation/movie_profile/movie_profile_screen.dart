@@ -35,7 +35,7 @@ class MovieProfileScreen extends StatelessWidget {
             FadeInImage.assetNetwork(
               placeholder: 'assets/placeholder.png', // Asegúrate de tener esta imagen en tus assets
               image: movie.posterPath,
-              height: 200,
+              height: 300,
               width: double.infinity,
               fit: BoxFit.cover,
               imageErrorBuilder: (context, error, stackTrace) {
@@ -105,7 +105,7 @@ class MovieProfileScreen extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   Text(
-                    'Walt Disney Pictures, Pixar',
+                    '${movie.genreIds}',
                     style: TextStyle(color: Colors.white70),
                   ),
                   const SizedBox(height: 16.0),
@@ -114,7 +114,7 @@ class MovieProfileScreen extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   Text(
-                    'Animación, Familia, Aventura, Comedia',
+                    '${movie.genreIds}',
                     style: TextStyle(color: Colors.white70),
                   ),
                   const SizedBox(height: 16.0),
@@ -123,7 +123,7 @@ class MovieProfileScreen extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   Text(
-                    '2024',
+                    '${movie.releaseDate}',
                     style: TextStyle(color: Colors.white70),
                   ),
                 ],

@@ -1,4 +1,5 @@
-part of 'home_bloc.dart';
+import 'package:cine_app/domain/entities/movie.dart';
+import 'package:equatable/equatable.dart';
 
 abstract class HomeState extends Equatable {
   const HomeState();
@@ -11,13 +12,17 @@ class HomeInitial extends HomeState {}
 
 class HomeLoading extends HomeState {}
 
-class HomeLoaded extends HomeState {
-  final List<Movie> movies;
+class HomeMoviesLoaded extends HomeState {
+  final List<Movie> nowPlayingMovies;
+  final List<Movie> popularMovies;
 
-  const HomeLoaded({required this.movies});
+  const HomeMoviesLoaded({
+    required this.nowPlayingMovies,
+    required this.popularMovies,
+  });
 
   @override
-  List<Object> get props => [movies];
+  List<Object> get props => [nowPlayingMovies, popularMovies];
 }
 
 class HomeError extends HomeState {
