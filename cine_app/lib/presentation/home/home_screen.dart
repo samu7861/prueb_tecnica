@@ -17,7 +17,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeBloc(moviesDatasoruce: MovieDatasourcesInf())
+      create: (context) => HomeBloc(moviesDatasoruce: MoviedbDatasource())
         ..add(GetNowPlayingMovies()),
       child: const HomeView(),
     );
