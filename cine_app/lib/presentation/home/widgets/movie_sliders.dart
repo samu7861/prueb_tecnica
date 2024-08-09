@@ -1,7 +1,10 @@
 
 import 'package:cine_app/domain/entities/movie.dart';
+import 'package:cine_app/infrastructure/datasources/movie_detail_datasource.dart';
+import 'package:cine_app/presentation/movie_profile/bloc/movie_detail_bloc.dart';
 import 'package:cine_app/presentation/movie_profile/movie_profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 class MovieHorizontalList extends StatelessWidget {
@@ -21,11 +24,19 @@ class MovieHorizontalList extends StatelessWidget {
           return GestureDetector(
             onTap: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MovieProfileScreen(movie: movie),
-                ),
-              );
+  context,
+  MaterialPageRoute(
+    builder: (context) {
+      return BlocProvider(
+        create: (context) => MovieDetailBloc(
+          context.read<MovieDetailDatasource>(),
+        )..add(LoadMovieDetailEvent(movie.id.toString())),
+        child: MovieDetailScreen(movieId: movie.id.toString()),
+      );
+    },
+  ),
+);
+
             },
             child: Container(
               width: 140, // Adjust width as needed

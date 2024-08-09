@@ -1,10 +1,12 @@
+import 'package:cine_app/presentation/movie_profile/bloc/movie_detail_bloc.dart';
 import 'package:flutter/material.dart';
-import '../../domain/entities/movie.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MovieProfileScreen extends StatelessWidget {
-  final Movie movie;
 
-  const MovieProfileScreen({Key? key, required this.movie}) : super(key: key);
+class MovieDetailScreen extends StatelessWidget {
+  final String movieId;
+
+  const MovieDetailScreen({Key? key, required this.movieId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,115 +24,125 @@ class MovieProfileScreen extends StatelessWidget {
           Icon(Icons.favorite_border_outlined, color: Colors.white),
         ],
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FadeInImage.assetNetwork(
-              placeholder: 'assets/placeholder.png', // Asegúrate de tener esta imagen en tus assets
-              image: movie.posterPath,
-              height: 300,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              imageErrorBuilder: (context, error, stackTrace) {
-                return Container(
-                  height: 200,
-                  width: double.infinity,
-                  color: Colors.grey,
-                  child: Icon(Icons.error, color: Colors.red),
-                );
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+      body: BlocBuilder<MovieDetailBloc, MovieDetailState>(
+        builder: (context, state) {
+          if (state is MovieDetailLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is MovieDetailLoaded) {
+            final movieDetails = state.movieDetails;
+            return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    movie.title,
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  const SizedBox(height: 8.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Acción para ver la película
+                  FadeInImage.assetNetwork(
+                    placeholder: 'assets/placeholder.png',
+                    image: 'https://image.tmdb.org/t/p/w500${movieDetails.backdropPath}',
+                    height: 300,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    imageErrorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        height: 200,
+                        width: double.infinity,
+                        color: Colors.grey,
+                        child: const Icon(Icons.error, color: Colors.red),
+                      );
                     },
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[700]),
-                    child: const Text('WATCH NOW'),
                   ),
-                  const SizedBox(height: 8.0),
-                  Row(
-                    children: List.generate(
-                      5,
-                      (starIndex) => Icon(
-                        starIndex < (movie.voteAverage / 2).floor()
-                            ? Icons.star
-                            : Icons.star_border,
-                        size: 16,
-                        color: Colors.amber,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  Text(
-                    movie.overview,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(height: 16.0),
-                  const Text(
-                    'Cast',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  const SizedBox(height: 8.0),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Añade aquí los actores de la película con URLs reales
-                        _buildActorAvatar('Amy Poehler', 'https://example.com/amy.jpg'),
-                        _buildActorAvatar('Maya Hawke', 'https://example.com/maya.jpg'),
-                        _buildActorAvatar('Kensington', 'https://example.com/kensington.jpg'),
+                        Text(
+                          movieDetails.title,
+                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                        const SizedBox(height: 8.0),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Acción para ver la película
+                          },
+                          style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[700]),
+                          child: const Text('WATCH NOW'),
+                        ),
+                        const SizedBox(height: 8.0),
+                        Row(
+                          children: List.generate(
+                            5,
+                            (starIndex) => Icon(
+                              starIndex < (movieDetails.voteAverage / 2).floor()
+                                  ? Icons.star
+                                  : Icons.star_border,
+                              size: 16,
+                              color: Colors.amber,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
+                        Text(
+                          movieDetails.overview,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        const SizedBox(height: 16.0),
+                        const Text(
+                          'Cast',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                        const SizedBox(height: 8.0),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: movieDetails.productionCompanies.map((company) {
+                              return _buildActorAvatar(company.name, 'https://image.tmdb.org/t/p/w500${company.logoPath ?? ''}');
+                            }).toList(),
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
+                        const Text(
+                          'Studio',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          movieDetails.productionCompanies.map((e) => e.name).join(', '),
+                          style: const TextStyle(color: Colors.white70),
+                        ),
+                        const SizedBox(height: 16.0),
+                        const Text(
+                          'Genre',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          movieDetails.genres.map((e) => e.name).join(', '),
+                          style: const TextStyle(color: Colors.white70),
+                        ),
+                        const SizedBox(height: 16.0),
+                        const Text(
+                          'Release',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          '${movieDetails.releaseDate.toLocal()}'.split(' ')[0],
+                          style: const TextStyle(color: Colors.white70),
+                        ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16.0),
-                  const Text(
-                    'Studio',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  Text(
-                    '${movie.genreIds}',
-                    style: TextStyle(color: Colors.white70),
-                  ),
-                  const SizedBox(height: 16.0),
-                  const Text(
-                    'Genre',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  Text(
-                    '${movie.genreIds}',
-                    style: TextStyle(color: Colors.white70),
-                  ),
-                  const SizedBox(height: 16.0),
-                  const Text(
-                    'Release',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  Text(
-                    '${movie.releaseDate}',
-                    style: TextStyle(color: Colors.white70),
-                  ),
                 ],
               ),
-            ),
-          ],
-        ),
+            );
+          } else if (state is MovieDetailError) {
+            return Center(child: Text('Error: ${state.message}'));
+          } else {
+            return const Center(child: Text('No data available'));
+          }
+        },
       ),
     );
   }
@@ -141,10 +153,10 @@ class MovieProfileScreen extends StatelessWidget {
       child: Column(
         children: [
           FadeInImage.assetNetwork(
-            placeholder: 'assets/placeholder.png', // Asegúrate de tener esta imagen en tus assets
+            placeholder: 'assets/placeholder.png',
             image: imageUrl,
             imageErrorBuilder: (context, error, stackTrace) {
-              return CircleAvatar(
+              return const CircleAvatar(
                 radius: 30,
                 backgroundColor: Colors.grey,
                 child: Icon(Icons.error, color: Colors.red),
