@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cine_app/main.dart'; 
+import 'package:cine_app/main.dart';
 
 class CustomAppBar extends StatelessWidget {
   const CustomAppBar({
@@ -43,15 +43,24 @@ class CustomAppBar extends StatelessWidget {
           const SizedBox(height: 16.0),
           TextField(
             decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: const Icon(Icons.search, color: Colors.white),
               hintText: 'Search',
+              hintStyle: const TextStyle(
+                  color: Colors
+                      .white54), 
               filled: true,
-              fillColor: Colors.white,
+              fillColor: Colors.white
+                  .withOpacity(0.2),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(
+                    16.0),
                 borderSide: BorderSide.none,
               ),
+              contentPadding: const EdgeInsets.symmetric(
+                  vertical: 10.0), 
             ),
+            style: const TextStyle(
+                color: Colors.white), 
           ),
         ],
       ),
